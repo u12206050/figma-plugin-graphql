@@ -1,0 +1,7 @@
+{
+  "name": "GraphQL Data Fill",
+  "id": "778614812931099944",
+  "api": "1.0.0",
+  "main": "./main.js",
+  "ui": "./index.html"
+}

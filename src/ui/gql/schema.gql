@@ -1,0 +1,343 @@
+type Article {
+  id: ID!
+  title: String!
+  slug(pre: String): String!
+  status: String!
+  excerpt: String
+  image: Image
+  colors(amount: Int, brightness: Int): [[Int]]
+  html: String
+  meta: ArticleMeta
+  section: Section
+  published(format: String): String
+  author: String!
+  documents: [Document]
+  document(id: ID!): [Document]
+  created_at(format: String): String
+  updated_at(format: String): String
+}
+
+type ArticleMeta {
+  header: String
+}
+
+type Author implements Node {
+  id: ID!
+  name: String!
+  email: String
+  meta: AuthorMeta
+}
+
+type AuthorMeta {
+  avatar: String
+  pos: String
+  tel: String
+  info: String
+}
+
+type AuthorPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [Author!]!
+}
+
+type AuthPayload {
+  access_token: String!
+  refresh_token: String!
+  expires_in: Int!
+  token_type: String!
+  user: User!
+}
+
+type Category {
+  id: ID!
+  title: String!
+  slug(pre: String): String!
+  is_active: Boolean
+  excerpt: String
+  created_at(format: String): String
+  updated_at(format: String): String
+}
+
+type CategoryPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [Category!]!
+}
+
+scalar Date
+
+scalar DateTime
+
+type Document {
+  id: ID!
+  name: String!
+  type: String!
+  size: String!
+  file: String
+  created_at(format: String): String
+}
+
+input ForgotPasswordInput {
+  email: String!
+}
+
+type ForgotPasswordResponse {
+  status: String!
+  message: String
+}
+
+type Image {
+  src: String
+  srcset: [String]
+  dataUri: String
+  sizes: String
+  size: Size
+}
+
+type ImageSet {
+  url: String!
+  alt: String
+}
+
+input LoginInput {
+  username: String!
+  password: String!
+}
+
+type LogoutResponse {
+  status: String!
+  message: String
+}
+
+type Mutation {
+  login(input: LoginInput): AuthPayload!
+  refreshToken(input: RefreshTokenInput): RefreshTokenPayload!
+  logout: LogoutResponse!
+  forgotPassword(input: ForgotPasswordInput!): ForgotPasswordResponse!
+  updateForgottenPassword(
+    input: NewPasswordWithCodeInput
+  ): ForgotPasswordResponse!
+  register(input: RegisterInput): AuthPayload!
+  shareSpace(id: ID!, share: Boolean!): Token
+}
+
+input NewPasswordWithCodeInput {
+  email: String!
+  token: String!
+  password: String!
+  password_confirmation: String!
+}
+
+interface Node {
+  id: ID!
+}
+
+input OrderByClause {
+  field: String!
+  order: SortOrder!
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+  total: Int
+  count: Int
+  currentPage: Int
+  lastPage: Int
+}
+
+type PaginatorInfo {
+  count: Int!
+  currentPage: Int!
+  firstItem: Int
+  hasMorePages: Boolean!
+  lastItem: Int
+  lastPage: Int!
+  perPage: Int!
+  total: Int!
+}
+
+type Post {
+  id: ID!
+  title: String!
+  slug(pre: String): String!
+  status: String!
+  excerpt: String
+  image: Image
+  colors(amount: Int, brightness: Int): [[Int]]
+  html: String
+  topics: [Topic]
+  author: Author!
+  published(format: String): String
+  created_at(format: String): String
+  updated_at(format: String): String
+  meta: PostMeta
+  prev: Post
+  next: Post
+}
+
+type PostMeta {
+  header: String
+  embed_url: String
+  vector_logo: String
+}
+
+type PostPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [Post!]!
+}
+
+type Product {
+  id: ID!
+  name: String!
+  slug(pre: String): String!
+  sku: String!
+  is_active: Boolean
+  excerpt: String
+  thumbnail: String
+  description: String
+  images: [ImageSet]
+  categories: [Category]
+  stock: Int
+  price: Float
+  special: Float
+  is_special: Boolean
+  special_start(format: String): String
+  special_end(format: String): String
+  created_at(format: String): String
+  updated_at(format: String): String
+}
+
+type ProductPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [Product!]!
+}
+
+type Query {
+  me: User
+  allProducts: [Product!]!
+  products(
+    orderBy: [OrderByClause!]
+    name: String
+    first: Int = 24
+    page: Int
+  ): ProductPaginator
+  product(id: ID, slug: String): Product
+  allCategories: [Category!]!
+  categories(
+    first: Int!
+    page: Int
+  ): CategoryPaginator
+  category(id: ID, slug: String): Category
+  allPosts: [Post!]!
+  posts(
+    orderBy: [OrderByClause!]
+    title: String
+    first: Int = 24
+    page: Int
+  ): PostPaginator
+  post(id: ID, slug: String): Post
+  previewPost(id: ID!): Post
+  allTopics: [Topic!]!
+  topics(
+    first: Int = 24
+    page: Int
+  ): TopicPaginator
+  topic(id: ID, slug: String): Topic
+  allAuthors: [Author!]!
+  authors(
+    first: Int = 24
+    page: Int
+  ): AuthorPaginator
+  author(id: ID, slug: String): Author
+  space(id: ID!): Space
+  sharedSpace(token: String!): Space
+  node(id: ID!): Node
+}
+
+input RefreshTokenInput {
+  refresh_token: String
+}
+
+type RefreshTokenPayload {
+  access_token: String!
+  refresh_token: String!
+  expires_in: Int!
+  token_type: String!
+}
+
+input RegisterInput {
+  name: String!
+  email: String!
+  password: String!
+  password_confirmation: String!
+}
+
+type Section {
+  id: ID!
+  title: String!
+  order: Int!
+  icon: String
+}
+
+type Size {
+  width: Int
+  height: Int
+}
+
+enum SortOrder {
+  ASC
+  DESC
+}
+
+type Space {
+  id: ID!
+  name: String!
+  slug(pre: String): String!
+  is_active: Boolean
+  logo: Image
+  token: String
+  articles(slug: String): [Article]
+  sections: [Section]
+}
+
+type Token {
+  token: String
+}
+
+type Topic {
+  id: ID!
+  title: String!
+  slug(pre: String): String!
+  excerpt: String
+  is_active: Boolean
+  in_menu: Boolean
+  posts(
+    first: Int!
+    page: Int
+  ): PostPaginator
+  count: Int!
+  created_at(format: String): String
+  updated_at(format: String): String
+}
+
+type TopicPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [Topic!]!
+}
+
+enum Trashed {
+  ONLY
+  WITH
+  WITHOUT
+}
+
+type User {
+  id: ID!
+  name: String!
+  email: String!
+  role: String!
+  spaces(slug: String): [Space]
+}
+
