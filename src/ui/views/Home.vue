@@ -13,6 +13,12 @@
             <input
               class="input-icon__input"
               type="text" v-model="url" placeholder="https://example.com/graphql" />
+            <input
+              class="input-icon__input"
+              type="text"
+              v-model="headers"
+              placeholder="Enter headers that should be set"
+            />
           </Tooltip>
         </div>
         <router-link to="help" class="text-purple-600 hover:text-purple-800 px-2">
@@ -33,7 +39,10 @@
           ref="graphiql"
         ></GraphiQL>
       </div>
-      <p v-else class="block p-2 bg-gray-100 text-gray-900 rounded">Please enter your graphql url and click the "Load Schema" button to the right</p>
+      <p v-else class="block p-2 bg-gray-100 text-gray-900 rounded">
+        Please enter your graphql url and click the "Load Schema" button to the
+        left
+      </p>
     </form>
   </div>
 </template>
@@ -56,24 +65,29 @@ export default {
       url: '',
       tab: 1,
       variables: `{}`,
-      headers: `{}`,
+      headers: `{ "Content-Type": "application/json", "Authorization": "Bearer foobar" }`,
       jsonOpts: {
         mode: 'application/json',
         tabSize: 2,
         lineNumbers: true
       }
-    }
+    };
   },
   methods: {
     createFetcher() {
       const endpoint = this.url
+      if (this.headers) storage.setItem('headers', this.headers);
+      if (this.key) storage.setItem('key', this.key);
       if (endpoint) {
-        storage.setItem('url', endpoint)
-        const options = { method: 'post', headers: { 'Content-Type': 'application/json' } }
-        this.fetcher = (param) => fetch(endpoint, { ...options, body: JSON.stringify(param) })
-          .then(response => response.json())
+        storage.setItem('url', endpoint);
+        const parsedHeaders = JSON.parse(this.headers);
+        const options = { method: 'post', headers: parsedHeaders };
+        this.fetcher = param =>
+          fetch(endpoint, { ...options, body: JSON.stringify(param) }).then(
+            response => response.json()
+          );
       } else {
-        this.fetcher = null
+        this.fetcher = null;
       }
     },
     chooseEndpoint() {
@@ -89,8 +103,8 @@ export default {
         const res = JSON.parse(graphiql.state.response)
         if (res.data) {
           parent.postMessage({ pluginMessage: {
-            action: 'generate',
-            data: res.data,
+                action: 'generate',
+                data: res.data,
             key: this.key.replace(/^data./,'')
           } }, '*')
         }
@@ -101,14 +115,16 @@ export default {
   },
   mounted() {
     storage.onLoad(() => {
+      this.key = this.$store.state.storage.key || ''
+      this.headers = this.$store.state.storage.headers || ''
       if (this.url = this.$store.state.storage.url || '')
         this.createFetcher()
       this.loading = false
     })
     window.parent.postMessage({
-      pluginMessage: {
-        action: 'getStorage'
-      }
+        pluginMessage: {
+          action: 'getStorage'
+        }
     }, '*')
     this.loading = window.self !== window.top
   },
