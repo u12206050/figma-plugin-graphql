@@ -9,7 +9,6 @@ figma.showUI(__html__, {
 // posted message.
 let storeData
 figma.ui.onmessage = async msg => {
-  console.log(msg.action)
   switch(msg.action) {
     case 'generate':
       if (msg.key) {
@@ -108,7 +107,8 @@ function loadImage(node, url) {
     figma.ui.postMessage({
       action: 'getImage',
       data: {
-        url: url
+        url: url,
+        corsUrl: storeData.corsUrl
       }
     })
   } else if (images[url].imgData) {

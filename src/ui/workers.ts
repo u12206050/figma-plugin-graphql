@@ -1,4 +1,4 @@
-import { load } from './storage'
+import storage, { load } from './storage'
 
 const canvas = document.createElement('canvas')
 const ctx = canvas.getContext('2d')
@@ -8,7 +8,7 @@ window.onmessage = async (msgEvent) => {
   const msg = msgEvent.data.pluginMessage
   switch(msg.action) {
     case 'getImage':
-      const imgData = await fetch(`https://api.codetabs.com/v1/proxy?quest=${msg.data.url}`)
+      const imgData = await fetch(`${msg.data.corsUrl}${msg.data.url}`)
         .then(response => response.arrayBuffer())
         .then(buffer => new Uint8Array(buffer)).catch((err) => {
           console.log(err)
