@@ -4,7 +4,8 @@
       <router-link
         to="/"
         class="p-2 leading-none font-semibold bg-gray-200 hover:bg-gray-300 rounded hover:text-blue-800 text-gray-800"
-        >◂ Back
+      >
+        ◂ Back
       </router-link>
       <h2 class="font-semibold text-2xl flex-1 text-center px-4">Settings</h2>
     </div>

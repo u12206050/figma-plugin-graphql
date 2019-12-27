@@ -9,6 +9,7 @@ figma.showUI(__html__, {
 // posted message.
 let storeData
 figma.ui.onmessage = async msg => {
+  console.log(msg.action)
   switch(msg.action) {
     case 'generate':
       if (msg.key) {

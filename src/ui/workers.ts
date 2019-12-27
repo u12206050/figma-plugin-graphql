@@ -1,4 +1,4 @@
-import storage, { load } from './storage'
+import { load } from './storage'
 
 const canvas = document.createElement('canvas')
 const ctx = canvas.getContext('2d')

@@ -1,33 +1,70 @@
 <template>
   <p v-if="loading" class="p-4 bg-purple-200">Loading...</p>
   <div class="h-screen" v-else>
-    <form @submit.stop.prevent="submit" class="content flex flex-col mx-auto p-4 pb-8 h-full m-0">
+    <form
+      @submit.stop.prevent="submit"
+      class="content flex flex-col mx-auto p-4 pb-8 h-full m-0"
+    >
       <div class="bg-gray-400 rounded p-2 mb-4">
         <div class="flex items-center mb-2">
           <div class="input-icon mr-1">
             <div class="input-icon__icon z-10">
-              <Tooltip tip="<b class='w-56'>Load Schema</b><br>Reconnect and load the schema">
-                <button @click.prevent="createFetcher" title=""  class="cursor-pointer icon icon--reset-instance icon--button"></button>
+              <Tooltip
+                tip="<b class='w-56'>Load Schema</b><br>Reconnect and load the schema"
+              >
+                <button
+                  @click.prevent="createFetcher"
+                  title=""
+                  class="cursor-pointer icon icon--reset-instance icon--button"
+                ></button>
               </Tooltip>
             </div>
-            <Tooltip class="w-full" tip="<b>Graphql Server url</b><br><span class='text-orange-500'>CORS info: Check Access-Control-Allow-Origin to allow <b>figma.com</b></span> or set a CORS-proxy in settings">
+            <Tooltip
+              class="w-full"
+              tip="<b>Graphql Server url</b><br><span class='text-orange-500'>CORS info: Check Access-Control-Allow-Origin to allow <b>figma.com</b></span> or set a CORS-proxy in settings"
+            >
               <input
                 class="input-icon__input"
-                type="text" v-model="url" placeholder="https://example.com/graphql" />
+                type="text"
+                v-model="url"
+                placeholder="https://example.com/graphql"
+              />
             </Tooltip>
           </div>
-          <router-link to="help" class="text-purple-600 hover:text-purple-800 px-1">
+          <router-link
+            to="help"
+            class="text-purple-600 hover:text-purple-800 px-1"
+          >
             <HelpCircle class="stroke-current w-6 h-6" />
           </router-link>
-          <router-link to="settings" class="text-purple-600 hover:text-purple-800 px-1">
+          <router-link
+            to="settings"
+            class="text-purple-600 hover:text-purple-800 px-1"
+          >
             <Settings class="stroke-current w-6 h-6" />
           </router-link>
         </div>
         <div class="flex items-center">
-          <Tooltip class="w-full" tip="Specifying this will duplicate your selected component for each item in the array before populating in the fields">
-            <input class="input" type="text" v-model="key" placeholder="Path to iterate over, eg. data.allPosts">
+          <Tooltip
+            class="w-full"
+            tip="Specifying this will duplicate your selected component for each item in the array before populating in the fields"
+          >
+            <input
+              class="input"
+              type="text"
+              v-model="key"
+              placeholder="Path to iterate over, eg. data.allPosts"
+            />
           </Tooltip>
-          <button aria-description="Generate elements with filled data" :class="[!fetcher ? 'cursor-not-allowed text-gray-400' : 'hover:text-blue-800 text-gray-800']" class="ml-2 p-2 leading-none font-semibold bg-gray-200 hover:bg-gray-300 rounded">
+          <button
+            aria-description="Generate elements with filled data"
+            :class="[
+              !fetcher
+                ? 'cursor-not-allowed text-gray-400'
+                : 'hover:text-blue-800 text-gray-800'
+            ]"
+            class="ml-2 p-2 leading-none font-semibold bg-gray-200 hover:bg-gray-300 rounded"
+          >
             Generate
           </button>
         </div>
@@ -105,8 +142,8 @@ export default {
         const res = JSON.parse(graphiql.state.response)
         if (res.data) {
           parent.postMessage({ pluginMessage: {
-                action: 'generate',
-                data: res.data,
+              action: 'generate',
+              data: res.data,
             key: this.key.replace(/^data./,'')
           } }, '*')
         }
@@ -124,9 +161,9 @@ export default {
       this.loading = false
     })
     window.parent.postMessage({
-        pluginMessage: {
-          action: 'getStorage'
-        }
+      pluginMessage: {
+        action: 'getStorage'
+      }
     }, '*')
     this.loading = window.self !== window.top
   },
