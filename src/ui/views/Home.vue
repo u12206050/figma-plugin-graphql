@@ -142,8 +142,8 @@ export default {
         const res = JSON.parse(graphiql.state.response)
         if (res.data) {
           parent.postMessage({ pluginMessage: {
-              action: 'generate',
-              data: res.data,
+            action: 'generate',
+            data: res.data,
             key: this.key.replace(/^data./,'')
           } }, '*')
         }
