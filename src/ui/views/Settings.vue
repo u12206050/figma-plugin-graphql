@@ -51,7 +51,7 @@ export default {
   },
   data() {
     return {
-      headers: '{}',
+      headers: '{ "Content-Type": "application/json" }',
       corsUrl: ''
     };
   },
@@ -64,18 +64,22 @@ export default {
     }
   },
   mounted() {
-    storage.onLoad(() => {
-      this.corsUrl = this.$store.state.storage.corsUrl || '';
-      this.headers = this.$store.state.storage.headers || '';
-    });
-    window.parent.postMessage(
-      {
-        pluginMessage: {
-          action: 'getStorage'
-        }
-      },
-      '*'
-    );
+    try {
+      storage.onLoad(() => {
+        this.headers = this.$store.state.storage.headers || '';
+        this.corsUrl = this.$store.state.storage.corsUrl || '';
+      });
+      window.parent.postMessage(
+        {
+          pluginMessage: {
+            action: 'getStorage'
+          }
+        },
+        '*'
+      );
+    } catch (e) {
+      console.error(e);
+    }
   }
 };
 </script>

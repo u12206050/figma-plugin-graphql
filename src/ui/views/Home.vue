@@ -21,7 +21,7 @@
             </div>
             <Tooltip
               class="w-full"
-              tip="<b>Graphql Server url</b><br><span class='text-orange-500'>CORS info: Check Access-Control-Allow-Origin to allow <b>figma.com</b></span> or set a CORS-proxy in settings"
+              tip="<b>Graphql Server url</b><br><span class='text-orange-500'>CORS info: Check Access-Control-Allow-Origin to allow <b>figma.com</b></span>"
             >
               <input
                 class="input-icon__input"
@@ -105,6 +105,7 @@ export default {
       url: '',
       tab: 1,
       variables: `{}`,
+      headers: '{ "Content-Type": "application/json" }',
       jsonOpts: {
         mode: 'application/json',
         tabSize: 2,
@@ -116,7 +117,6 @@ export default {
     createFetcher() {
       const endpoint = this.url
       if (this.headers) storage.setItem('headers', this.headers);
-      if (this.key) storage.setItem('key', this.key);
       if (endpoint) {
         storage.setItem('url', endpoint);
         const parsedHeaders = JSON.parse(this.headers);
@@ -154,7 +154,6 @@ export default {
   },
   mounted() {
     storage.onLoad(() => {
-      this.key = this.$store.state.storage.key || ''
       this.headers = this.$store.state.storage.headers || ''
       if (this.url = this.$store.state.storage.url || '')
         this.createFetcher()

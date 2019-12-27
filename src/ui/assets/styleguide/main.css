@@ -587,9 +587,7 @@
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  width: calc(100% - 16px);	
   min-height: 62px;
-  margin: 1px 8px 1px 8px;
   padding: 7px 7px 7px 7px;
   resize: none;
   color: rgba(0, 0, 0, 0.8);
