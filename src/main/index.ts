@@ -108,7 +108,8 @@ function loadImage(node, url) {
     figma.ui.postMessage({
       action: 'getImage',
       data: {
-        url: url
+        url: url,
+        corsUrl: storeData.corsUrl
       }
     })
   } else if (images[url].imgData) {

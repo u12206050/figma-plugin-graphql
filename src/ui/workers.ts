@@ -6,9 +6,10 @@ const ctx = canvas.getContext('2d')
 window.onmessage = async (msgEvent) => {
   if (!msgEvent || !msgEvent.data || !msgEvent.data.pluginMessage) return
   const msg = msgEvent.data.pluginMessage
+  const corsUrl = msg.data.corsUrl || ''
   switch(msg.action) {
     case 'getImage':
-      const imgData = await fetch(`https://api.codetabs.com/v1/proxy?quest=${msg.data.url}`)
+      const imgData = await fetch(`${corsUrl}${msg.data.url}`)
         .then(response => response.arrayBuffer())
         .then(buffer => new Uint8Array(buffer)).catch((err) => {
           console.log(err)
